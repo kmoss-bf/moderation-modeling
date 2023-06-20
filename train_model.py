@@ -22,7 +22,7 @@ config = {
   "lin": 64,
   "dropout": .5,
   "lr": 1e-5,
-  "batch_size": 32)
+  "batch_size": 32
 }
 
 class CustomDataset(Dataset):
@@ -149,7 +149,7 @@ def validation(data_loader, model, device):
     return fin_outputs, fin_targets
 
 def train(config, data_path, bert_model, tokenizer, epochs=5):
-    training_loader, testing_loader = load_data(data_path=data_path,tokenizer=tokenizer train_batch_size=config['batch_size'])
+    training_loader, testing_loader = load_data(data_path=data_path,tokenizer=tokenizer, train_batch_size=config['batch_size'])
 
     model = BERTClass(bert_model, lin_size=config['lin'], dropout=config['dropout'])
 
@@ -184,10 +184,13 @@ def train(config, data_path, bert_model, tokenizer, epochs=5):
             loss.backward()
             optimizer.step()
 
+            if batch_id % 10 == 0:
+                print('\r', f'[Epoch {epoch}/{epochs}], [Batch {batch_id}/{length}] loss: {loss.item():.4f}', end=' ')
+
         outputs_, targets = validation(testing_loader, model=model, device=device)
 
         outputs = (np.array(outputs_)>0.5).astype(int)
 
         val_accuracy = metrics.accuracy_score(targets, outputs)
-        val_loss = loss_fn(outputs, targets)
+        print('Validation accuracy:', val_accuracy)
     return model
