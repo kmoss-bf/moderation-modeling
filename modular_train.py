@@ -136,7 +136,7 @@ for i, fig_ in enumerate(figs):
   fig_.savefig(buffers[i], format='png', bbox_inches='tight')
 
 for buffer in buffers:
-  doc.add_picture(buffer)
+  doc.add_picture(buffer, width=width)
 
 doc.add_paragraph(f'{metrics.accuracy_score(test_targets, test_outputs):.3f}, {metrics.f1_score(test_targets, test_outputs):.3f}')
 
